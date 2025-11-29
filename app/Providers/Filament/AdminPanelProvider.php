@@ -19,6 +19,10 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Filament\Navigation\MenuItem;
+use Illuminate\Support\Facades\Auth;
+use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -60,7 +64,30 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+                FilamentEditProfilePlugin::make()
+                    ->slug('my-profile')
+                    ->setTitle('My Profile')
+                    ->setNavigationLabel('My Profile')
+                    ->setIcon('heroicon-o-user')
+                    ->setNavigationGroup('Users & Permissions')
+                    ->shouldShowEmailForm()
+                    ->shouldShowSanctumTokens()
+                    ->shouldShowBrowserSessionsForm()
+                    ->shouldShowAvatarForm(
+
+                    )
+                    ->shouldShowDeleteAccountForm(false),
             ])
+            // ->userMenuItems([
+            //     'my-profile' => MenuItem::make()
+            //         ->label(fn() => Auth::user()->name)
+            //         ->url(fn (): string => EditProfilePage::getUrl())
+            //         ->icon('heroicon-m-user-circle')
+            //         //If you are using tenancy need to check with the visible method where ->company() is the relation between the user and tenancy model as you called
+            //         ->visible(function (): bool {
+            //             return Auth::user()->exists;
+            //         }),
+            // ])
             ->authMiddleware([
                 Authenticate::class,
             ]);
